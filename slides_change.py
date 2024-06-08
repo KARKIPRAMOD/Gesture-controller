@@ -2,8 +2,8 @@ import cv2 as cv
 import mediapipe as mp
 import pyautogui
 
-cam_index = 1
-capture = cv.VideoCapture(cam_index)
+cam_index = 1       #TO ACCESS THE CAMERA                                       
+capture = cv.VideoCapture(cam_index)        #CAPTURES THE FRAMES FROM THE CAM
 if not capture.isOpened():
     print("Error: Could not open the camera")
     exit()
@@ -17,8 +17,8 @@ speaker_icon = (10,10)
 arrow_icon = (10,10)
 speaker_mode = False
 
-
-text = f'camera {cam_index}'
+#################### TEXT FUNCTIONS ####################
+text = f'camera {cam_index}'  
 font = cv.FONT_HERSHEY_SIMPLEX
 position = (10, 50)
 font_scale = 1
@@ -26,14 +26,27 @@ font_color = (0, 255, 0)
 thickness = 2
 line_type = cv.LINE_AA
 
+#################### FUNCTIONS TO DETECT HANDS AND DRAW KEYPOINTS ####################
 myhands = mp.solutions.hands.Hands()
 drawing = mp.solutions.drawing_utils
 
+#################### VARIABLES TO STORE PREVIOUS COORDINATES OF KEYPOINTS ####################
 p_x8, p_y8 = 0, 0
 p_x12, p_y12 = 0, 0
 swipe_text = ""
 volume_text = ""
 
+#################### FUNCTION TO CHANGE VOLUMES BASED ON THE FINGER KEYPOINTS ####################
+def volume_control(x8,x4,y8,y4):
+    dist = ((x8 - x4)**2 + (y8 - y4)**2) ** 0.5
+    if dist > 100:
+        pyautogui.press('volumeup')
+        volume_text = "Volume Up"
+    else:
+        pyautogui.press('volumedown')
+        volume_text = "Volume Down"
+
+#################### THIS LOOPS CONTINOUSLY WORK UNTIL THE CAMERA IS SHUT OFF OR USER CLOSES THE APPLICATION ####################
 while True:
     isTrue, frame = capture.read()
     if not isTrue:
@@ -42,6 +55,7 @@ while True:
     rgb_format = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     output = myhands.process(rgb_format)
     hands = output.multi_hand_landmarks
+    #################### IF HAND IS DETECTED THEN IT FINDS THE LANDMARK (coordinates of the keypoints) ####################
     if hands:
         for hand in hands:
             drawing.draw_landmarks(frame, hand, mp.solutions.hands.HAND_CONNECTIONS)
@@ -77,13 +91,7 @@ while True:
                     print(swipe_text)
                     p_y8 = p_y12 = 0
 
-            dist = ((x8 - x4)**2 + (y8 - y4)**2) ** 0.5
-            if dist > 100: 
-                pyautogui.press('volumeup')
-                volume_text = "Volume Up"
-            else:
-                pyautogui.press('volumedown')
-                volume_text = "Volume Down"
+            volume_control(x8,x4,y8,y4)
 
             p_x8, p_y8, p_x12, p_y12 = x8, y8, x12, y12
 
