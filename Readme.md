@@ -12,9 +12,9 @@ Technologies Used:
 
 1. Python
 2. OpenCV
-3. How to Run:
 
-Clone the repository.
+How to Run:
+-> Clone the repository.
 -> Install the required dependencies for opencv
 -> Run the script using python gesture_controller.py.
 -> Use hand gestures to interact with your computer.
