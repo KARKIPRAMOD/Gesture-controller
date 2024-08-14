@@ -3,7 +3,7 @@ import mediapipe as mp
 import pyautogui
 import time
 
-cam_index = 1  # TO ACCESS THE CAMERA
+cam_index = 0  # TO ACCESS THE CAMERA
 capture = cv.VideoCapture(cam_index)  # CAPTURES THE FRAMES FROM THE CAM
 if not capture.isOpened():
     print("Error: Could not open the camera")
